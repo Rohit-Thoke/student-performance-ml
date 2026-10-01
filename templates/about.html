@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+
+{% block title %}About Project & Viva Guide - Student Performance System{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <!-- Header Section -->
+    <div>
+        <div class="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/30 px-3 py-1 rounded-full text-xs font-semibold text-purple-400 mb-2">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>College Machine Learning Mini Project</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold text-white">
+            Student Performance Prediction System
+        </h1>
+        <p class="text-sm text-slate-400 mt-1">Complete Technical Documentation, ML Mechanics & Academic Viva Preparation Guide</p>
+    </div>
+
+    <!-- Section 1: Problem Statement & Objectives -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+            <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-circle-question text-blue-400"></i>
+                Problem Statement
+            </h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Educational institutions face challenges in identifying at-risk students before final examinations occur. Traditional evaluation models fail to capture multi-dimensional factors such as attendance trends, continuous assignment scores, internal assessment performance, and sleep/study habits. Early identification through predictive machine learning empowers educators to provide timely remedial guidance.
+            </p>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+            <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-bullseye text-emerald-400"></i>
+                Project Objectives
+            </h2>
+            <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                <li>Demonstrate complete end-to-end Machine Learning pipeline from raw CSV to deployed web system.</li>
+                <li>Clean, preprocess, and standardize academic and lifestyle student feature vectors.</li>
+                <li>Train and compare 4 supervised classification algorithms (Logistic Regression, Decision Tree, Random Forest, KNN).</li>
+                <li>Provide explainable, data-driven academic insights alongside prediction confidence probabilities.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Section 2: Supervised Algorithms Explained -->
+    <div class="glass-card rounded-3xl p-6 space-y-6">
+        <h2 class="text-xl font-heading font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-brain text-purple-400"></i>
+            Supervised Machine Learning Algorithms Breakdown
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+
+            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-blue-400 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> 1. Logistic Regression
+                </h3>
+                <p class="text-slate-300 leading-relaxed">
+                    A baseline linear model that applies the Softmax function to linear feature combinations to estimate multi-class probability distributions for Poor, Average, and Good classes.
+                </p>
+                <div class="text-[11px] font-mono text-slate-400 bg-slate-950 p-2 rounded-lg">
+                    Formula: $P(Y=k|X) = \frac{e^{w_k^T X + b_k}}{\sum_j e^{w_j^T X + b_j}}$
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-purple-400 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-network-wired"></i> 2. Decision Tree Classifier
+                </h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Splits features recursively by selecting threshold values that minimize node Gini Impurity or Information Entropy, producing interpretable decision rules.
+                </p>
+                <div class="text-[11px] font-mono text-slate-400 bg-slate-950 p-2 rounded-lg">
+                    Formula: $Gini = 1 - \sum_{i=1}^C p_i^2$
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-emerald-400 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-tree"></i> 3. Random Forest Classifier
+                </h3>
+                <p class="text-slate-300 leading-relaxed">
+                    An ensemble bagging method constructing 100 decorrelated decision trees on bootstrap dataset samples. Final prediction is aggregated via majority voting.
+                </p>
+                <div class="text-[11px] font-mono text-slate-400 bg-slate-950 p-2 rounded-lg">
+                    Aggregated Prediction: $\hat{Y} = \text{mode}(T_1(X), T_2(X), ..., T_B(X))$
+                </div>
+            </div>
+
+            <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-amber-400 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-circle-nodes"></i> 4. K-Nearest Neighbors (KNN)
+                </h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Non-parametric instance-based classifier calculating Euclidean distance $d(x, y) = \sqrt{\sum (x_i - y_i)^2}$ to find $k=5$ closest training instances in feature space.
+                </p>
+                <div class="text-[11px] font-mono text-slate-400 bg-slate-950 p-2 rounded-lg">
+                    Distance: $d(\mathbf{a}, \mathbf{b}) = \sqrt{\sum_{i=1}^n (a_i - b_i)^2}$
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Section 3: College Viva Questions & Answers Section -->
+    <div class="glass-card rounded-3xl p-6 space-y-6 border border-blue-500/20">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-clipboard-question text-amber-400"></i>
+                College Project Viva Evaluation Questions & Answers
+            </h2>
+            <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-semibold">
+                Exam Preparation
+            </span>
+        </div>
+
+        <div class="space-y-4">
+
+            <!-- Q1 -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-slate-100 text-sm">
+                    Q1: Why is Data Preprocessing crucial before feeding data into ML models?
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-blue-400">Answer:</strong> Raw datasets contain missing values, outliers, and differing feature scales (e.g., Attendance is 0-100%, Backlogs are 0-5). Without preprocessing: (1) missing values cause runtime errors, (2) unscaled features cause distance-based algorithms like KNN to be dominated by larger range features, and (3) categorical variables ('Yes'/'No') cannot be mathematically computed.
+                </p>
+            </div>
+
+            <!-- Q2 -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-slate-100 text-sm">
+                    Q2: What is Data Leakage and how did you prevent it in your project?
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-blue-400">Answer:</strong> Data leakage occurs when information from the test dataset leaks into the training pipeline (e.g., fitting StandardScaler on the entire dataset before splitting). We prevented leakage by performing `train_test_split` first, fitting the `StandardScaler` strictly on `X_train`, and using that fitted object to transform `X_test` and single prediction inputs.
+                </p>
+            </div>
+
+            <!-- Q3 -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-slate-100 text-sm">
+                    Q3: Why did Random Forest outperform single Decision Trees in your evaluation?
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-blue-400">Answer:</strong> Single Decision Trees are prone to overfitting high-variance training data. Random Forest builds 100 decorrelated decision trees using bootstrap sampling (bagging) and random feature subsetting. Averaging predictions across multiple trees reduces overall variance while keeping bias low, leading to higher test set accuracy.
+                </p>
+            </div>
+
+            <!-- Q4 -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-slate-100 text-sm">
+                    Q4: What evaluation metric is most important for identifying 'Poor' at-risk students?
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-blue-400">Answer:</strong> <strong class="text-emerald-400">Recall</strong> for the 'Poor' class is most critical. High recall minimizes False Negatives—meaning we avoid failing to detect an at-risk student who truly needs academic intervention.
+                </p>
+            </div>
+
+            <!-- Q5 -->
+            <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
+                <h3 class="font-heading font-bold text-slate-100 text-sm">
+                    Q5: How does your web app load saved trained models without retraining every request?
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-blue-400">Answer:</strong> During training, fitted model objects and scaler pipelines are serialized to disk as binary `.joblib` files in `models/trained_models/`. When a user submits a prediction request, Flask deserializes the saved `.joblib` binary using `joblib.load()`, executing instant inference in milliseconds.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

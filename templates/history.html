@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block title %}Prediction History - Student Performance System{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-heading font-bold text-white flex items-center gap-3">
+                <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+                Prediction Logs & History
+            </h1>
+            <p class="text-sm text-slate-400">Stored predictions recorded in SQLite local database (`database/predictions.db`)</p>
+        </div>
+
+        <button onclick="clearPredictionHistory()" class="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-semibold transition-all flex items-center space-x-2">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Clear History Logs</span>
+        </button>
+    </div>
+
+    <!-- History Logs Table Card -->
+    <div class="glass-card rounded-3xl p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-database text-blue-400"></i>
+                SQLite Database Records
+            </h2>
+            <input type="text" id="history-search" onkeyup="filterHistoryTable()" placeholder="Search prediction logs..." class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 w-full sm:w-64 focus:outline-none focus:border-blue-500">
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-xs text-left text-slate-300 custom-table">
+                <thead class="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                    <tr>
+                        <th class="px-4 py-3">ID & Date</th>
+                        <th class="px-4 py-3">Classifier Used</th>
+                        <th class="px-4 py-3 text-right">Study Hrs</th>
+                        <th class="px-4 py-3 text-right">Attendance %</th>
+                        <th class="px-4 py-3 text-right">Prev Marks</th>
+                        <th class="px-4 py-3 text-center">Backlogs</th>
+                        <th class="px-4 py-3 text-center">Predicted Category</th>
+                        <th class="px-4 py-3 text-right">Confidence</th>
+                    </tr>
+                </thead>
+                <tbody id="history-tbody" class="divide-y divide-slate-800/60 font-mono">
+                    {% if predictions %}
+                        {% for row in predictions %}
+                            <tr class="hover:bg-slate-800/40 transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="font-bold text-slate-200">#{{ row.id }}</div>
+                                    <div class="text-[10px] text-slate-400">{{ row.timestamp }}</div>
+                                </td>
+                                <td class="px-4 py-3 text-blue-400 font-sans font-medium">{{ row.selected_model }}</td>
+                                <td class="px-4 py-3 text-right">{{ row.study_hours }} hrs</td>
+                                <td class="px-4 py-3 text-right">{{ row.attendance }}%</td>
+                                <td class="px-4 py-3 text-right">{{ row.previous_marks }}%</td>
+                                <td class="px-4 py-3 text-center">{{ row.backlogs }}</td>
+                                <td class="px-4 py-3 text-center">
+                                    {% if row.predicted_class == 'Good' %}
+                                        <span class="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Good</span>
+                                    {% elif row.predicted_class == 'Average' %}
+                                        <span class="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">Average</span>
+                                    {% else %}
+                                        <span class="inline-block px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">Poor</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-200">{{ row.confidence }}%</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="px-4 py-8 text-center text-slate-400">
+                                <i class="fa-solid fa-folder-open text-2xl mb-2 text-slate-400 block"></i>
+                                No prediction logs recorded in database yet.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function filterHistoryTable() {
+        const input = document.getElementById('history-search');
+        const filter = input.value.toLowerCase();
+        const tbody = document.getElementById('history-tbody');
+        const rows = tbody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const text = rows[i].textContent.toLowerCase();
+            rows[i].style.display = text.includes(filter) ? '' : 'none';
+        }
+    }
+</script>
+{% endblock %}

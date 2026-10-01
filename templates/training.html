@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block title %}Model Training - Student Performance System{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-heading font-bold text-white flex items-center gap-3">
+                <i class="fa-solid fa-brain text-blue-400"></i>
+                Supervised Model Training
+            </h1>
+            <p class="text-sm text-slate-400">Train and tune 4 classification algorithms using 80% stratified training split</p>
+        </div>
+
+        <button id="btn-train-models" onclick="triggerTraining()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-500/25 ring-1 ring-white/20 flex items-center space-x-2">
+            <i class="fa-solid fa-play text-xs"></i>
+            <span>Train All 4 Models</span>
+        </button>
+    </div>
+
+    <!-- Training Status Banner -->
+    <div id="training-status-banner" class="glass-card rounded-2xl p-4 border border-blue-500/30 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <span class="text-xs font-semibold text-slate-200">Models status: <span id="models-status-text" class="text-emerald-400 font-bold">Models Trained & Saved to Disk</span></span>
+        </div>
+        <span class="text-xs text-slate-400 font-mono">Stratified Split: 400 Train / 100 Test</span>
+    </div>
+
+    <!-- 4 Algorithm Detail Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Logistic Regression -->
+        <div class="glass-card rounded-3xl p-5 space-y-3 border-t-4 border-blue-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase">Baseline Linear</span>
+                <i class="fa-solid fa-chart-line text-blue-400"></i>
+            </div>
+            <h3 class="text-base font-heading font-bold text-white">Logistic Regression</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Multinomial linear classifier modeling log-odds of student performance classes.</p>
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">Accuracy:</span>
+                <span id="acc-lr" class="font-bold text-blue-400">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Decision Tree -->
+        <div class="glass-card rounded-3xl p-5 space-y-3 border-t-4 border-purple-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-purple-400 uppercase">Tree Rule-Based</span>
+                <i class="fa-solid fa-network-wired text-purple-400"></i>
+            </div>
+            <h3 class="text-base font-heading font-bold text-white">Decision Tree</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Non-linear binary split decision tree with Gini impurity split criteria.</p>
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">Accuracy:</span>
+                <span id="acc-dt" class="font-bold text-purple-400">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Random Forest -->
+        <div class="glass-card rounded-3xl p-5 space-y-3 border-t-4 border-emerald-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-emerald-400 uppercase">Ensemble Bagging</span>
+                <i class="fa-solid fa-tree text-emerald-400"></i>
+            </div>
+            <h3 class="text-base font-heading font-bold text-white">Random Forest</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Ensemble of 100 decision trees reducing variance and preventing overfitting.</p>
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">Accuracy:</span>
+                <span id="acc-rf" class="font-bold text-emerald-400">Loading...</span>
+            </div>
+        </div>
+
+        <!-- KNN -->
+        <div class="glass-card rounded-3xl p-5 space-y-3 border-t-4 border-amber-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-400 uppercase">Distance-Based</span>
+                <i class="fa-solid fa-circle-nodes text-amber-400"></i>
+            </div>
+            <h3 class="text-base font-heading font-bold text-white">K-Nearest Neighbors</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Instance-based learning assigning class by majority vote of 5 nearest Euclidean neighbors.</p>
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-400">Accuracy:</span>
+                <span id="acc-knn" class="font-bold text-amber-400">Loading...</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Trained Models Summary Table -->
+    <div class="glass-card rounded-3xl p-6 space-y-4">
+        <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-table text-blue-400"></i>
+            Model Training Comparison Matrix
+        </h2>
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-xs text-left text-slate-300">
+                <thead class="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                    <tr>
+                        <th class="px-4 py-3">Algorithm</th>
+                        <th class="px-4 py-3">Model Type</th>
+                        <th class="px-4 py-3 text-right">Accuracy (%)</th>
+                        <th class="px-4 py-3 text-right">F1 Score (%)</th>
+                        <th class="px-4 py-3 text-right">Binary Saved File</th>
+                    </tr>
+                </thead>
+                <tbody id="train-summary-tbody" class="divide-y divide-slate-800/60 font-mono">
+                    <tr><td colspan="5" class="px-4 py-4 text-center text-slate-400">Loading model training stats...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadTrainingStats();
+    });
+</script>
+{% endblock %}

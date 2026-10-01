@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}Model Evaluation - Student Performance System{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-heading font-bold text-white flex items-center gap-3">
+                <i class="fa-solid fa-chart-column text-blue-400"></i>
+                Model Evaluation & Comparative Analysis
+            </h1>
+            <p class="text-sm text-slate-400">Evaluated on unseen held-out testing dataset (100 student records)</p>
+        </div>
+
+        <div id="best-model-badge" class="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/40 px-4 py-2 rounded-2xl flex items-center space-x-2 shadow-lg shadow-emerald-500/10">
+            <i class="fa-solid fa-trophy text-amber-400 text-lg animate-bounce"></i>
+            <div>
+                <span class="text-xs text-slate-400 block font-medium">Top Performing Model:</span>
+                <span id="top-model-name" class="font-heading font-bold text-emerald-400 text-sm">Random Forest (84.0%)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparative Metrics Table Card -->
+    <div class="glass-card rounded-3xl p-6 space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-table-cells text-blue-400"></i>
+                Calculated Classification Evaluation Metrics
+            </h2>
+            <span class="text-xs text-slate-400">Evaluated on Test Data</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-xs text-left text-slate-300">
+                <thead class="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                    <tr>
+                        <th class="px-4 py-3">Algorithm</th>
+                        <th class="px-4 py-3 text-right">Accuracy (%)</th>
+                        <th class="px-4 py-3 text-right">Precision (Weighted)</th>
+                        <th class="px-4 py-3 text-right">Recall (Weighted)</th>
+                        <th class="px-4 py-3 text-right">F1-Score (Weighted)</th>
+                        <th class="px-4 py-3 text-right">Performance Rank</th>
+                    </tr>
+                </thead>
+                <tbody id="eval-metrics-tbody" class="divide-y divide-slate-800/60 font-mono">
+                    <tr><td colspan="6" class="px-4 py-4 text-center text-slate-400">Loading evaluation metrics...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Accuracy & F1 Comparison Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Accuracy Comparison Bar Chart -->
+        <div class="glass-card rounded-3xl p-6 space-y-4">
+            <h2 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-bar text-blue-400"></i>
+                Model Accuracy Comparison (%)
+            </h2>
+            <div class="h-64 relative">
+                <canvas id="chart-accuracy-comp"></canvas>
+            </div>
+        </div>
+
+        <!-- Feature Importance Bar Chart -->
+        <div class="glass-card rounded-3xl p-6 space-y-4">
+            <h2 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-ranking-star text-purple-400"></i>
+                Feature Importance (Tree-Based Models)
+            </h2>
+            <div class="h-64 relative">
+                <canvas id="chart-feature-importance"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3x3 Confusion Matrix Grid -->
+    <div class="glass-card rounded-3xl p-6 space-y-6">
+        <div>
+            <h2 class="text-xl font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-border-all text-emerald-400"></i>
+                3x3 Confusion Matrices (Actual vs Predicted)
+            </h2>
+            <p class="text-xs text-slate-400">Diagonal cells represent correct classification instances for Poor, Average, and Good classes</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="confusion-matrices-grid">
+            <!-- Will be dynamically populated by main.js -->
+            <div class="text-slate-400 text-xs">Loading confusion matrices...</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadEvaluationData();
+    });
+</script>
+{% endblock %}

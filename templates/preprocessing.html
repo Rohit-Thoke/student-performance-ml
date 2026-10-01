@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+{% block title %}Data Preprocessing - Student Performance Prediction System{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-heading font-bold text-white flex items-center gap-3">
+                <i class="fa-solid fa-filter text-blue-400"></i>
+                Data Preprocessing Pipeline
+            </h1>
+            <p class="text-sm text-slate-400">Clean, encode, scale, and split raw student records for machine learning training</p>
+        </div>
+
+        <button onclick="triggerPreprocessing()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-500/20 flex items-center space-x-2">
+            <i class="fa-solid fa-rotate text-xs"></i>
+            <span>Run Preprocessing Pipeline</span>
+        </button>
+    </div>
+
+    <!-- Step-by-Step Preprocessing Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Step 1: Missing Values Imputation -->
+        <div class="glass-card rounded-3xl p-6 space-y-3 border-l-4 border-blue-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Step 1 &bull; Imputation</span>
+                <i class="fa-solid fa-vial text-blue-400"></i>
+            </div>
+            <h2 class="text-lg font-heading font-bold text-white">Missing Values Handling</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Numerical features (study hours, marks, attendance) with missing entries are imputed using the <span class="text-blue-400 font-semibold">Column Median</span> to prevent outlier distortion. Categorical features are imputed using the <span class="text-blue-400 font-semibold">Mode</span>.
+            </p>
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+                <span>Handled Missing Null Entries:</span>
+                <span id="prep-missing-count" class="text-emerald-400 font-bold">5 values</span>
+            </div>
+        </div>
+
+        <!-- Step 2: Duplicate Removal & Outlier Clipping -->
+        <div class="glass-card rounded-3xl p-6 space-y-3 border-l-4 border-purple-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Step 2 &bull; Cleaning</span>
+                <i class="fa-solid fa-broom text-purple-400"></i>
+            </div>
+            <h2 class="text-lg font-heading font-bold text-white">Duplicate & Outlier Cleaning</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Identical duplicate student records are purged. Feature bounds are enforced: Attendance (0-100%), Marks (0-100%), Internal Marks (0-30), and Study Hours (0-16).
+            </p>
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+                <span>Duplicates Purged:</span>
+                <span id="prep-dup-count" class="text-purple-400 font-bold">0 records</span>
+            </div>
+        </div>
+
+        <!-- Step 3: Categorical Variable Encoding -->
+        <div class="glass-card rounded-3xl p-6 space-y-3 border-l-4 border-amber-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Step 3 &bull; Encoding</span>
+                <i class="fa-solid fa-binary-lock text-amber-400"></i>
+            </div>
+            <h2 class="text-lg font-heading font-bold text-white">Categorical Variable Encoding</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Non-numeric attributes like <span class="text-amber-400 font-semibold">Extracurricular Activities</span> are converted to numerical binary format (<span class="text-emerald-400 font-semibold">Yes = 1</span>, <span class="text-slate-400 font-semibold">No = 0</span>). Target performance labels are mapped: <span class="text-red-400 font-semibold">Poor (0)</span>, <span class="text-amber-400 font-semibold">Average (1)</span>, <span class="text-emerald-400 font-semibold">Good (2)</span>.
+            </p>
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs font-mono text-slate-400">
+                Extracurricular: "Yes" &rarr; 1, "No" &rarr; 0
+            </div>
+        </div>
+
+        <!-- Step 4: Feature Scaling (StandardScaler) -->
+        <div class="glass-card rounded-3xl p-6 space-y-3 border-l-4 border-emerald-500">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Step 4 &bull; Scaling</span>
+                <i class="fa-solid fa-scale-balanced text-emerald-400"></i>
+            </div>
+            <h2 class="text-lg font-heading font-bold text-white">Standardization (StandardScaler)</h2>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Numerical features are scaled to zero mean ($\mu = 0$) and unit variance ($\sigma^2 = 1$) using formula $z = \frac{x - \mu}{\sigma}$. This ensures feature scale dominance doesn't skew distance-based algorithms like KNN and Logistic Regression.
+            </p>
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs font-mono text-emerald-400">
+                Scaler fitted on X_train only to prevent data leakage.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Train-Test Split Summary Card -->
+    <div class="glass-card rounded-3xl p-6 space-y-6">
+        <h2 class="text-xl font-heading font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-scissors text-blue-400"></i>
+            Stratified Train-Test Dataset Partition
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+            <div class="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 text-center space-y-2">
+                <div class="text-xs text-slate-400 uppercase font-semibold">Total Processed Dataset</div>
+                <div id="split-total" class="text-3xl font-extrabold font-heading text-white">500</div>
+                <p class="text-xs text-slate-400">Clean Student Instances</p>
+            </div>
+
+            <div class="bg-blue-600/10 rounded-2xl p-5 border border-blue-500/30 text-center space-y-2 ring-1 ring-blue-500/20">
+                <div class="text-xs text-blue-400 uppercase font-semibold">Training Set (80%)</div>
+                <div id="split-train" class="text-3xl font-extrabold font-heading text-blue-400">400</div>
+                <p class="text-xs text-slate-400">Used for fitting models</p>
+            </div>
+
+            <div class="bg-purple-600/10 rounded-2xl p-5 border border-purple-500/30 text-center space-y-2 ring-1 ring-purple-500/20">
+                <div class="text-xs text-purple-400 uppercase font-semibold">Testing Set (20%)</div>
+                <div id="split-test" class="text-3xl font-extrabold font-heading text-purple-400">100</div>
+                <p class="text-xs text-slate-400">Held-out for accuracy testing</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        triggerPreprocessing();
+    });
+</script>
+{% endblock %}

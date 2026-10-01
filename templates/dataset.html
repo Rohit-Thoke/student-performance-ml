@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block title %}Dataset - Student Performance Prediction System{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-heading font-bold text-white flex items-center gap-3">
+                <i class="fa-solid fa-database text-blue-400"></i>
+                Dataset Management & Preview
+            </h1>
+            <p class="text-sm text-slate-400">Inspect loaded student records or upload your own CSV dataset</p>
+        </div>
+
+        <!-- CSV Upload Form -->
+        <form action="{{ url_for('upload_dataset') }}" method="POST" enctype="multipart/form-data" class="flex items-center space-x-2">
+            <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center space-x-2">
+                <i class="fa-solid fa-upload text-blue-400"></i>
+                <span>Choose CSV File</span>
+                <input type="file" name="dataset_file" accept=".csv" class="hidden" onchange="this.form.submit()">
+            </label>
+        </form>
+    </div>
+
+    <!-- Summary Overview Cards -->
+    <div id="dataset-summary-cards" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="glass-card rounded-2xl p-4 border border-slate-800">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Total Rows</span>
+            <div id="summary-rows" class="text-2xl font-bold font-heading text-white mt-1">Loading...</div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border border-slate-800">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Features Count</span>
+            <div id="summary-cols" class="text-2xl font-bold font-heading text-purple-400 mt-1">Loading...</div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border border-slate-800">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Missing Values</span>
+            <div id="summary-missing" class="text-2xl font-bold font-heading text-amber-400 mt-1">Loading...</div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 border border-slate-800">
+            <span class="text-xs font-semibold text-slate-400 uppercase">Duplicate Records</span>
+            <div id="summary-duplicates" class="text-2xl font-bold font-heading text-red-400 mt-1">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Dataset Preview Table Card -->
+    <div class="glass-card rounded-3xl p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-table text-blue-400"></i>
+                    Dataset Preview (First 10 Records)
+                </h2>
+                <p id="active-filename" class="text-xs text-slate-400">File: student_performance.csv</p>
+            </div>
+            <input type="text" id="table-search" placeholder="Search preview table..." class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 w-full sm:w-64 focus:outline-none focus:border-blue-500">
+        </div>
+
+        <!-- Scrollable Table Container -->
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-left text-xs text-slate-300 custom-table">
+                <thead class="text-xs uppercase bg-slate-900 text-slate-400 font-semibold border-b border-slate-800">
+                    <tr id="preview-thead-tr">
+                        <th class="px-4 py-3">Loading Columns...</th>
+                    </tr>
+                </thead>
+                <tbody id="preview-tbody" class="divide-y divide-slate-800/60 font-mono">
+                    <tr>
+                        <td class="px-4 py-4 text-center text-slate-400">Loading dataset contents...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Columns Metadata & Data Types Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Column Data Types -->
+        <div class="glass-card rounded-3xl p-6 space-y-4">
+            <h3 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-purple-400"></i>
+                Column Data Types & Missing Values
+            </h3>
+            <div class="overflow-y-auto max-h-64 rounded-xl border border-slate-800">
+                <table class="w-full text-xs text-left text-slate-300">
+                    <thead class="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                        <tr>
+                            <th class="px-4 py-2.5">Column Name</th>
+                            <th class="px-4 py-2.5">Data Type</th>
+                            <th class="px-4 py-2.5 text-right">Missing Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dtypes-tbody" class="divide-y divide-slate-800/60 font-mono">
+                        <tr><td colspan="3" class="px-4 py-3 text-center">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Basic Statistics Summary -->
+        <div class="glass-card rounded-3xl p-6 space-y-4">
+            <h3 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-calculator text-emerald-400"></i>
+                Basic Summary Statistics
+            </h3>
+            <div class="overflow-y-auto max-h-64 rounded-xl border border-slate-800">
+                <table class="w-full text-xs text-left text-slate-300">
+                    <thead class="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                        <tr>
+                            <th class="px-3 py-2">Feature</th>
+                            <th class="px-3 py-2 text-right">Mean</th>
+                            <th class="px-3 py-2 text-right">Std</th>
+                            <th class="px-3 py-2 text-right">Min</th>
+                            <th class="px-3 py-2 text-right">Max</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stats-tbody" class="divide-y divide-slate-800/60 font-mono">
+                        <tr><td colspan="5" class="px-4 py-3 text-center">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchDatasetInfo();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+/* Custom Styles & Glassmorphism Aesthetics */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+
+:root {
+    --bg-dark: #090d16;
+    --card-bg: rgba(15, 23, 42, 0.75);
+    --border-glow: rgba(59, 130, 246, 0.3);
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(88, 28, 135, 0.15) 0px, transparent 50%);
+    background-attachment: fixed;
+}
+
+/* Glassmorphism Card Style */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 12px 40px 0 rgba(37, 99, 235, 0.15);
+}
+
+/* Animated Workflow Step Cards */
+.workflow-step {
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.workflow-step:hover {
+    transform: translateY(-4px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #090d16;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+}
+
+/* Glowing badge */
+.glow-badge-emerald {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.glow-badge-blue {
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.glow-badge-purple {
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+}
+
+/* Table styling */
+.custom-table th {
+    background-color: rgba(30, 41, 59, 0.8);
+}
+
+.custom-table tr:hover {
+    background-color: rgba(30, 41, 59, 0.4);
+}

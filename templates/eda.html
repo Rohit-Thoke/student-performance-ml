@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}Exploratory Data Analysis (EDA) - Student Performance System{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Header -->
+    <div>
+        <h1 class="text-2xl sm:text-3xl font-heading font-bold text-white flex items-center gap-3">
+            <i class="fa-solid fa-chart-pie text-blue-400"></i>
+            Exploratory Data Analysis (EDA)
+        </h1>
+        <p class="text-sm text-slate-400">Interactive visual exploration of student performance distributions, correlations, and academic trends</p>
+    </div>
+
+    <!-- Charts Grid Row 1 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Target Class Distribution Doughnut Chart -->
+        <div class="glass-card rounded-3xl p-6 space-y-4 lg:col-span-1">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-donut text-emerald-400"></i>
+                    Performance Class Distribution
+                </h2>
+                <span class="text-xs text-slate-400">Target (y)</span>
+            </div>
+            <div class="h-64 relative flex items-center justify-center">
+                <canvas id="chart-target-dist"></canvas>
+            </div>
+        </div>
+
+        <!-- Attendance % vs Marks Scatter Chart -->
+        <div class="glass-card rounded-3xl p-6 space-y-4 lg:col-span-2">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-scatter text-blue-400"></i>
+                    Attendance % vs Previous Semester Marks
+                </h2>
+                <span class="text-xs text-slate-400">Colored by Class</span>
+            </div>
+            <div class="h-64 relative">
+                <canvas id="chart-attendance-marks"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts Grid Row 2 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Study Hours vs Performance Bar Chart -->
+        <div class="glass-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-amber-400"></i>
+                    Study Hours vs Marks Trend
+                </h2>
+                <span class="text-xs text-slate-400">Academic Habit Impact</span>
+            </div>
+            <div class="h-64 relative">
+                <canvas id="chart-study-marks"></canvas>
+            </div>
+        </div>
+
+        <!-- Dynamic Feature Distribution Histogram -->
+        <div class="glass-card rounded-3xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-heading font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-simple text-purple-400"></i>
+                    Feature Distribution Histogram
+                </h2>
+                <select id="hist-feature-select" onchange="renderHistogramChart()" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-blue-500">
+                    <option value="Attendance_Percentage">Attendance %</option>
+                    <option value="Study_Hours">Study Hours</option>
+                    <option value="Previous_Semester_Marks">Previous Marks</option>
+                    <option value="Assignment_Score">Assignment Score</option>
+                    <option value="Internal_Assessment_Marks">Internal Marks</option>
+                </select>
+            </div>
+            <div class="h-64 relative">
+                <canvas id="chart-feature-hist"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Correlation Matrix Table -->
+    <div class="glass-card rounded-3xl p-6 space-y-4">
+        <h2 class="text-lg font-heading font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-grid-2 text-indigo-400"></i>
+            Feature Pearson Correlation Matrix Heatmap
+        </h2>
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-xs text-center text-slate-300 font-mono">
+                <thead class="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                    <tr id="corr-thead-tr">
+                        <th class="px-3 py-2.5 text-left">Feature</th>
+                    </tr>
+                </thead>
+                <tbody id="corr-tbody" class="divide-y divide-slate-800/60">
+                    <tr><td class="px-4 py-4 text-center text-slate-400">Loading correlation matrix...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadEDAData();
+    });
+</script>
+{% endblock %}
